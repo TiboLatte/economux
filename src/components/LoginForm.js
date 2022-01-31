@@ -1,10 +1,9 @@
 import React, { useState } from "react";
 import axios from "axios";
-import Cookies from "universal-cookie";
-
+import { useCookies } from "react-cookie";
 
 export default function Register() {
-    const cookies = new Cookies();
+  const [cookies, setCookie] = useCookies(["authToken"]);
   const [user, setUser] = useState({ email: "", password: "" });
 
   const handleChange = (event) => {
@@ -34,8 +33,9 @@ export default function Register() {
     axios
       .post("http://localhost:5000/api/user/login", body)
       .then((response) => {
-        cookies.set("auth-token",response.data, {maxAge: 7200})
-        console.log(cookies.get("auth-token"))
+        setCookie("authToken", response.data, { path: "/", sameSite: 'none', secure: true });
+        //console.log(cookies.authToken);
+        
       });
   };
 
